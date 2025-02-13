@@ -1,6 +1,10 @@
 package evaluationcritera
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/google/uuid"
+)
 
 type store struct {
 	db *sql.DB
@@ -14,7 +18,7 @@ func NewStore(db *sql.DB) *store {
 }
 
 
-func (s *store) CreateEvaluationCriteria(jobPostingID, criteriaName, description string, weight float32) (*EvaluationCriteria, error) {
+func (s *store) CreateEvaluationCriteria(jobPostingID uuid.UUID, criteriaName, description string, weight float32) (*EvaluationCriteria, error) {
 	rows := s.db.QueryRow("INSERT INTO evaluation_criteria (job_posting_id, criteria_name, description, weight) VALUES ($1, $2, $3, $4)", jobPostingID, criteriaName, description, weight)
 
 	createdEvaluationCriteria, err := ScanRowToEvaluationCriteria(rows)
@@ -27,7 +31,7 @@ func (s *store) CreateEvaluationCriteria(jobPostingID, criteriaName, description
 
 }
 
-func (s *store) GetEvaluationCriteriaByJobPostingID(jobPostingID string) (*[]EvaluationCriteria, error) {
+func (s *store) GetEvaluationCriteriaByJobPostingID(jobPostingID uuid.UUID) ([]*EvaluationCriteria, error) {
 	rows, err := s.db.Query("SELECT * FROM evaluation_criteria WHERE job_posting_id = $1", jobPostingID)
 
 	if err != nil {
@@ -36,10 +40,10 @@ func (s *store) GetEvaluationCriteriaByJobPostingID(jobPostingID string) (*[]Eva
 
 	defer rows.Close()
 
-	evaluationCriterias := make([]EvaluationCriteria, 0)
+	evaluationCriterias := make([]*EvaluationCriteria, 0)
 
 	for rows.Next() {
-		var evaluationCriteria EvaluationCriteria
+		var evaluationCriteria *EvaluationCriteria
 		err := rows.Scan(&evaluationCriteria.ID, &evaluationCriteria.JobPostingID, &evaluationCriteria.CriteriaName, &evaluationCriteria.Description, &evaluationCriteria.Weight, &evaluationCriteria.CreatedAt, &evaluationCriteria.UpdatedAt)
 
 		if err != nil {
@@ -49,7 +53,7 @@ func (s *store) GetEvaluationCriteriaByJobPostingID(jobPostingID string) (*[]Eva
 		evaluationCriterias = append(evaluationCriterias, evaluationCriteria)
 	}
 
-	return &evaluationCriterias, nil
+	return evaluationCriterias, nil
 }
 
 func ScanRowToEvaluationCriteria(rows *sql.Row) (*EvaluationCriteria, error) {

@@ -52,3 +52,14 @@ func (s *store) GetJobPostings(userID uuid.UUID, limit, offset int) ([]*JobPosti
 
 	return jobPostings, nil
 }
+
+func (s *store) GetJobPostingByID(jobPostingID uuid.UUID) (*JobPosting, error) {
+	var jobPosting JobPosting
+	err := s.db.QueryRow("SELECT * FROM job_postings WHERE id = $1", jobPostingID).Scan(&jobPosting.ID, &jobPosting.UserID, &jobPosting.Title, &jobPosting.Description, &jobPosting.Location, &jobPosting.Department, &jobPosting.EmploymentType, &jobPosting.CreatedAt, &jobPosting.UpdatedAt)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &jobPosting, nil
+}

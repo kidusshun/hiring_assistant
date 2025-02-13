@@ -50,7 +50,7 @@ func (s *Service) AddEvaluationCriteria(email string, payload []CreateCriteriaPa
 }
 
 
-func (s *Service) GetEvaluationCritera(email string, payload GetEvaluationCriteriaPayload) ([]*EvaluationCriteria, error) {
+func (s *Service) GetEvaluationCriteria(email string, payload GetEvaluationCriteriaPayload) ([]*EvaluationCriteria, error) {
 	user, err := s.userStore.GetUserByEmail(email)
 
 	if err != nil {

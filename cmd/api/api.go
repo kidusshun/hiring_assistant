@@ -6,6 +6,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	evaluationcritera "github.com/kidusshun/hiring_assistant/service/evaluation_critera"
+	jobposting "github.com/kidusshun/hiring_assistant/service/job_posting"
+	"github.com/kidusshun/hiring_assistant/service/user"
 )
 
 type APIServer struct {
@@ -35,7 +38,19 @@ func (s *APIServer) Run() error {
 
 	router.Use(middleware.Logger)
 
-	
+	userStore := user.NewStore(s.db)
+	userService := user.NewService(userStore)
+	userHandler := user.NewHandler(userService)
+	userHandler.RegisterRoutes(router)
 
+	jobPostingStore := jobposting.NewStore(s.db)
+	jobPostingService := jobposting.NewService(userStore, jobPostingStore)
+	jobPostingHandler := jobposting.NewHandler(jobPostingService)
+	jobPostingHandler.RegisterRoutes(router)
+
+	evaluationCriteriaStore := evaluationcritera.NewStore(s.db)
+	evaluationCriteriaService := evaluationcritera.NewService(evaluationCriteriaStore, userStore, jobPostingStore)
+	evaluationCriteriaHandler := evaluationcritera.NewHandler(evaluationCriteriaService)
+	evaluationCriteriaHandler.RegisterRoutes(router)
 	return nil
 }
