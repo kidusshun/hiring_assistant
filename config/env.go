@@ -24,6 +24,10 @@ type GoogleClientConfig struct {
 	GoogleClientSecret string
 }
 
+type GeminiConfig struct {
+	GeminiAPIKey string
+}
+
 func initDatabaseConfig() DBConfig {
 	godotenv.Load()
 
@@ -54,6 +58,13 @@ func initGoogleClientConfig() GoogleClientConfig {
 }
 
 
+func initGeminiAPIConfig() GeminiConfig {
+	godotenv.Load()
+	return GeminiConfig{
+		GeminiAPIKey: getEnv("GEMINI_API_KEY", ""),
+	}
+}
+
 func getEnv(key, fallback string) string {
 
 	if value, ok := os.LookupEnv(key); ok {
@@ -68,3 +79,5 @@ var DB = initDatabaseConfig()
 var JWTEnvs = initJWTConfig()
 
 var GoogleClient = initGoogleClientConfig()
+
+var GeminiAPI = initGeminiAPIConfig()
