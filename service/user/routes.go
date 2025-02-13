@@ -59,7 +59,7 @@ func (h*Handler) googleAuth(w http.ResponseWriter, r *http.Request) {
 
 
 func (h *Handler) getMe(w http.ResponseWriter, r *http.Request) {
-	userEmail := r.Context().Value("user").(string)
+	userEmail := r.Context().Value("email").(string)
 
 	user, err := h.service.GetMe(userEmail)
 
