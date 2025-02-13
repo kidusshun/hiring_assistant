@@ -13,6 +13,7 @@ type JobPostingService interface {
 type JobPostingStore interface {
 	CreateJobPosting(jobPosting *JobPosting) (*JobPosting, error)
 	GetJobPostings(userID uuid.UUID, limit, offset int) ([]*JobPosting, error)
+	GetJobPostingByID(jobPostingID uuid.UUID) (*JobPosting, error)
 }
 
 type JobPosting struct {
