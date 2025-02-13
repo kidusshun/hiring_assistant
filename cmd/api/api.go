@@ -2,6 +2,8 @@ package api
 
 import (
 	"database/sql"
+	"log"
+	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -52,5 +54,9 @@ func (s *APIServer) Run() error {
 	evaluationCriteriaService := evaluationcritera.NewService(evaluationCriteriaStore, userStore, jobPostingStore)
 	evaluationCriteriaHandler := evaluationcritera.NewHandler(evaluationCriteriaService)
 	evaluationCriteriaHandler.RegisterRoutes(router)
-	return nil
+	
+	log.Println("Listening on ", s.addr)
+	err := http.ListenAndServe(s.addr, router)
+
+	return err
 }

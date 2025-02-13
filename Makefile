@@ -1,11 +1,11 @@
 build:
-	@go build -o bin/ecom cmd/main.go
+	@go build -o bin/main cmd/main.go
 
 test:
 	@go test -v ./...
 
 run: build
-	@./bin/ecom
+	@./bin/main
 
 watch: build
 	@if command -v air > /dev/null; then \
