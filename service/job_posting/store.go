@@ -19,7 +19,7 @@ func NewStore(db *sql.DB) *store {
 
 
 func (s *store) CreateJobPosting(jobPosting *JobPosting) (*JobPosting, error) {
-	_, err := s.db.Exec("INSERT INTO job_postings (id, user_id, title, description, location, department, employment_type) VALUES ($1, $2, $3, $4, $5, $6, $7)", jobPosting.ID, jobPosting.UserID, jobPosting.Title, jobPosting.Description, jobPosting.Location, jobPosting.Department, jobPosting.EmploymentType)
+	_, err := s.db.Exec("INSERT INTO job_postings (user_id, title, description, location, department, employment_type) VALUES ($1, $2, $3, $4, $5, $6)", jobPosting.UserID, jobPosting.Title, jobPosting.Description, jobPosting.Location, jobPosting.Department, jobPosting.EmploymentType)
 
 	if err != nil {
 		return nil, err

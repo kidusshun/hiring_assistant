@@ -2,6 +2,8 @@ package jobposting
 
 import (
 	"encoding/json"
+	"errors"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -30,7 +32,7 @@ func (h *Handler) RegisterRoutes(router	chi.Router) {
 
 func (h *Handler) createJobPosting(w http.ResponseWriter, r *http.Request) {
 	// get the user email from the context
-	userEmail := r.Context().Value("email").(string)
+	userEmail := r.Context().Value("userEmail").(string)
 
 	// get the job posting details from the request body
 	var request CreateJobPostingPayload
@@ -53,7 +55,12 @@ func (h *Handler) createJobPosting(w http.ResponseWriter, r *http.Request) {
 }
 func (h *Handler) getJobPostings(w http.ResponseWriter, r *http.Request) {
 	// get the user email from the context
-	userEmail := r.Context().Value("email").(string)
+	userEmail, ok := r.Context().Value("userEmail").(string)
+	if !ok {
+		log.Println("could not get user email from context")
+		utils.WriteError(w, http.StatusInternalServerError, errors.New("could not get user email from context"))
+		return
+	}
 
 	// get the limit and offset from the query params
 	limit := r.URL.Query().Get("limit")

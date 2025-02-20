@@ -1,5 +1,5 @@
 CREATE TABLE resumes (
-    id UUID NOT NULL PRIMARY KEY,
+    id UUID NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     job_posting_id UUID NOT NULL,
     applicant_name VARCHAR(255),
     applicant_email VARCHAR(255),

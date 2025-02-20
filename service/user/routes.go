@@ -3,6 +3,7 @@ package user
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -43,10 +44,11 @@ func (h*Handler) googleAuth(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusUnauthorized, err)
 		return
 	}
-
+	
 	jwtToken, err := h.service.AddUser(user)
 
 	if err != nil {
+		log.Println(err)
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return
 	}

@@ -1,5 +1,5 @@
 CREATE TABLE evaluations (
-    id UUID NOT NULL PRIMARY KEY,
+    id UUID NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     resume_id UUID NOT NULL,
     overall_score NUMERIC(5,2) NOT NULL,
     pass BOOLEAN DEFAULT FALSE,

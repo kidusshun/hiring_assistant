@@ -1,5 +1,5 @@
 CREATE TABLE evaluation_criteria (
-    id UUID NOT NULL PRIMARY KEY,
+    id UUID NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     job_posting_id UUID NOT NULL,
     criteria_name VARCHAR(255) NOT NULL,
     description TEXT,

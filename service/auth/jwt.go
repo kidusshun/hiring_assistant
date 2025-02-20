@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -29,6 +30,7 @@ func CheckBearerToken(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         authHeader := r.Header.Get("Authorization")
         if !strings.HasPrefix(authHeader, "Bearer ") {
+			log.Println("no bearer prefix included")
             http.Error(w, "Missing or invalid token", http.StatusUnauthorized)
             return
         }
@@ -38,18 +40,21 @@ func CheckBearerToken(next http.Handler) http.Handler {
                 return jwtSecret, nil
             })
             if err != nil || !tokenObj.Valid {
+				log.Println("token invalid")
 				utils.WriteError(w, http.StatusUnauthorized, err)
 				return
 			}
 
             claims, ok := tokenObj.Claims.(jwt.MapClaims)
             if !ok {
+				log.Println("no claims")
                 utils.WriteError(w, http.StatusUnauthorized, err)
 				return
             }
 
             userEmail, ok := claims["email"].(string)
             if !ok {
+				log.Println("no email in token")
                 utils.WriteError(w, http.StatusUnauthorized, errors.New("No email in token"))
 				return
             }
