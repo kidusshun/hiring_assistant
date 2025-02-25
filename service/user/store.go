@@ -43,8 +43,8 @@ func (s *Store) GetUserByID(id uuid.UUID) (*User, error) {
 
 }
 
-func (s *Store) CreateUser(email, firstName, lastName, profilePictureURL string) (*User, error) {
-	row := s.db.QueryRow("INSERT INTO users (email,first_name, last_name, profile_picture_url) VALUES ($1, $2, $3, $4) RETURNING id, email,first_name, last_name, profile_picture_url, created_at, updated_at", email, firstName, lastName, profilePictureURL)
+func (s *Store) CreateUser(email, firstName, lastName, profilePictureURL, accessToken string) (*User, error) {
+	row := s.db.QueryRow("INSERT INTO users (email, access_token, first_name, last_name, profile_picture_url) VALUES ($1, $2, $3, $4, $5) RETURNING id, email,access_token, first_name, last_name, profile_picture_url, created_at, updated_at", email,accessToken, firstName, lastName, profilePictureURL)
 	
 	createdUser, err := ScanRowToUser(row)
 	if err != nil {
@@ -59,6 +59,7 @@ func ScanRowToUser(rows *sql.Row) (*User, error) {
 	err := rows.Scan(
 		&user.ID,
 		&user.Email,
+		&user.AccessToken,
 		&user.FirstName,
 		&user.LastName,
 		&user.ProfilePictureURL,

@@ -45,7 +45,7 @@ func GeminiClient(userRequest GeminiRequestBody) (*GeminiResponseBody, error) {
 
 		return nil, errors.New(string(bodyBytes))
 	}
-
+	
 	geminiResponse := parseGeminiResponse(res.Body)
 	return geminiResponse, nil
 }

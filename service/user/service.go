@@ -17,14 +17,13 @@ func NewService(store UserStore) *Service {
 }
 
 
-func (s *Service) AddUser(user *auth.GoogleUser) (string, error) {
+func (s *Service) AddUser(user *auth.GoogleUser, accessToken string) (string, error) {
 	// check if user exists
 	storedUser, err := s.store.GetUserByEmail(user.Email)
 
 	if storedUser == nil {
 		if err == sql.ErrNoRows {
-			createdUser, err := s.store.CreateUser(user.Email, user.FirstName, user.LastName, user.Picture)
-
+			createdUser, err := s.store.CreateUser(user.Email, user.FirstName, user.LastName, user.Picture, accessToken)
 			if err != nil {
 				return "", err
 			}

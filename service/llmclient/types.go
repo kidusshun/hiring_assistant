@@ -21,6 +21,12 @@ type GeminiRequestBody struct {
 	Contents          []Message              `json:"contents,omitempty"`
 	ToolConfig        FunctionCallingConfig  `json:"tool_config,omitempty"`
 	Tools             []Tool                 `json:"tools,omitempty"`
+	GenerationConfig  GenerationConfig `json:"generation_config,omitempty"`
+}
+
+type GenerationConfig struct {
+	ResponseMimeType string `json:"response_mime_type,omitempty"`
+	ResponseSchema map[string]interface{} `json:"response_schema,omitempty"`
 }
 
 type RoleEnum int
@@ -51,7 +57,16 @@ const (
 )
 
 func (m ModeEnum) String() string {
-	return []string{"AUTO", "ANY", "NONE"}[m-1]
+	switch m {
+    case AUTO:
+        return "AUTO"
+    case ANY:
+        return "ANY"
+    case NONE:
+        return "NONE"
+    default:
+        return "AUTO" // Handle unexpected values
+    }
 }
 
 type FunctionDeclaration struct {
@@ -176,4 +191,9 @@ type ChatRequest struct {
 type ChatResponse struct {
 	Content string `json:"content"`
 	Role string `json:"role"`
+}
+
+type ResumeProfile struct {
+	Email string `json:"email"`
+	Name string `json:"name"`
 }

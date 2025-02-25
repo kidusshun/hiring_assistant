@@ -43,7 +43,7 @@ func (s *store) GetEvaluationCriteriaByJobPostingID(jobPostingID uuid.UUID) ([]*
 	evaluationCriterias := make([]*EvaluationCriteria, 0)
 
 	for rows.Next() {
-		var evaluationCriteria *EvaluationCriteria
+		evaluationCriteria := new(EvaluationCriteria)
 		err := rows.Scan(&evaluationCriteria.ID, &evaluationCriteria.JobPostingID, &evaluationCriteria.CriteriaName, &evaluationCriteria.Description, &evaluationCriteria.Weight, &evaluationCriteria.CreatedAt, &evaluationCriteria.UpdatedAt)
 
 		if err != nil {

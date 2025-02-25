@@ -36,32 +36,32 @@ func CheckBearerToken(next http.Handler) http.Handler {
         }
 
         rawToken := strings.TrimPrefix(authHeader, "Bearer ")
-            tokenObj, err := jwt.Parse(rawToken, func(t *jwt.Token) (interface{}, error) {
-                return jwtSecret, nil
-            })
-            if err != nil || !tokenObj.Valid {
-				log.Println("token invalid")
-				utils.WriteError(w, http.StatusUnauthorized, err)
-				return
-			}
+		tokenObj, err := jwt.Parse(rawToken, func(t *jwt.Token) (interface{}, error) {
+			return jwtSecret, nil
+		})
+		if err != nil || !tokenObj.Valid {
+			log.Println("token invalid")
+			utils.WriteError(w, http.StatusUnauthorized, err)
+			return
+		}
 
-            claims, ok := tokenObj.Claims.(jwt.MapClaims)
-            if !ok {
-				log.Println("no claims")
-                utils.WriteError(w, http.StatusUnauthorized, err)
-				return
-            }
+		claims, ok := tokenObj.Claims.(jwt.MapClaims)
+		if !ok {
+			log.Println("no claims")
+			utils.WriteError(w, http.StatusUnauthorized, err)
+			return
+		}
 
-            userEmail, ok := claims["email"].(string)
-            if !ok {
-				log.Println("no email in token")
-                utils.WriteError(w, http.StatusUnauthorized, errors.New("No email in token"))
-				return
-            }
+		userEmail, ok := claims["email"].(string)
+		if !ok {
+			log.Println("no email in token")
+			utils.WriteError(w, http.StatusUnauthorized, errors.New("no email in token"))
+			return
+		}
 
-			ctx := context.WithValue(r.Context(), "userEmail", userEmail)
-            r = r.WithContext(ctx)
+		ctx := context.WithValue(r.Context(), "userEmail", userEmail)
+		r = r.WithContext(ctx)
 
-			next.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
     })
 }

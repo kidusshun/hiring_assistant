@@ -4,6 +4,7 @@ CREATE TABLE resumes (
     applicant_name VARCHAR(255),
     applicant_email VARCHAR(255),
     resume_file_path TEXT NOT NULL,
+    resume_text TEXT NOT NULL,
     status VARCHAR(50) DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

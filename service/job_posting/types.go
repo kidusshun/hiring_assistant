@@ -34,4 +34,5 @@ type CreateJobPostingPayload struct {
 	Location 		string `json:"location"`
 	Department 		string `json:"department"`
 	EmploymentType 	string `json:"employment_type"`
+	Requirements 	[]string `json:"requirements"`
 }

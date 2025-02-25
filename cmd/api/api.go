@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/cors"
 	evaluationcritera "github.com/kidusshun/hiring_assistant/service/evaluation_critera"
 	jobposting "github.com/kidusshun/hiring_assistant/service/job_posting"
+	"github.com/kidusshun/hiring_assistant/service/resumes"
 	"github.com/kidusshun/hiring_assistant/service/user"
 )
 
@@ -54,6 +55,11 @@ func (s *APIServer) Run() error {
 	evaluationCriteriaService := evaluationcritera.NewService(evaluationCriteriaStore, userStore, jobPostingStore)
 	evaluationCriteriaHandler := evaluationcritera.NewHandler(evaluationCriteriaService)
 	evaluationCriteriaHandler.RegisterRoutes(router)
+
+	resumeStore := resumes.NewStore(s.db)
+	resumeService := resumes.NewService(resumeStore, userStore, jobPostingStore)
+	resumeHandler := resumes.NewHandler(resumeService)
+	resumeHandler.RegisterRoutes(router)
 	
 	log.Println("Listening on ", s.addr)
 	err := http.ListenAndServe(s.addr, router)

@@ -8,13 +8,13 @@ import (
 )
 
 type UserStore interface {
-	CreateUser(email, firstName, lastName, profilePictureURL string) (*User, error)
+	CreateUser(email, firstName, lastName, profilePictureURL, accessToken string) (*User, error)
 	GetUserByID(id uuid.UUID) (*User, error)
 	GetUserByEmail(email string) (*User, error)
 }
 
 type UserService interface {
-	AddUser(user *auth.GoogleUser) (string, error)
+	AddUser(user *auth.GoogleUser, accessToken string) (string, error)
 	GetMe(email string) (*User, error)
 }
 
@@ -23,6 +23,7 @@ type UserService interface {
 type User struct {
 	ID uuid.UUID `json:"id"`
 	Email string `json:"email"`
+	AccessToken string `json:"access_token"`
 	FirstName string `json:"first_name"`
 	LastName string `json:"last_name"`
 	ProfilePictureURL string `json:"profile_picture_url"`

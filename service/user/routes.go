@@ -45,7 +45,7 @@ func (h*Handler) googleAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	jwtToken, err := h.service.AddUser(user)
+	jwtToken, err := h.service.AddUser(user, request.AccessToken)
 
 	if err != nil {
 		log.Println(err)
@@ -56,12 +56,13 @@ func (h*Handler) googleAuth(w http.ResponseWriter, r *http.Request) {
 	response := LoginResponse{
 		Token: jwtToken,
 	}
+	log.Println(response)
 	utils.WriteJSON(w, http.StatusOK, response)
 }
 
 
 func (h *Handler) getMe(w http.ResponseWriter, r *http.Request) {
-	userEmail := r.Context().Value("email").(string)
+	userEmail := r.Context().Value("userEmail").(string)
 
 	user, err := h.service.GetMe(userEmail)
 
