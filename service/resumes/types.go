@@ -8,10 +8,12 @@ import (
 
 type ResumeService interface {
 	StoreResumeService(userEmail string, request CreateResumesPayload) ([]Resume, error)
+	GetResumesService(userEmail string, jobPostingID uuid.UUID) ([]Resume, error)
 }
 
 type ResumeStore interface {
 	AddResumes(resume []Resume) ([]Resume, error)
+	GetResumesByJobPostingID(jobPostingID uuid.UUID) ([]Resume, error)
 }
 
 type ResumeStatus string

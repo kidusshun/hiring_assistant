@@ -82,3 +82,26 @@ func processResumes(resumes []JobResumePayload, jobPostingID uuid.UUID) ([]Resum
 }
 
 
+
+func (s *service)GetResumesService(userEmail string, jobPostingID uuid.UUID) ([]Resume, error) {
+	storedUser, err := s.userStore.GetUserByEmail(userEmail)
+
+	if err != nil {
+		return nil, err
+	}
+	storedJobPosting, err := s.jobPostingStore.GetJobPostingByID(jobPostingID)
+	if err != nil {
+		return nil, err
+	}
+
+	if storedJobPosting.UserID != storedUser.ID {
+		return nil, errors.New("user does not own the job posting")
+	}
+
+	storedResumes, err := s.resumeStore.GetResumesByJobPostingID(jobPostingID)
+	if err != nil {
+		return nil, err
+	}
+
+	return storedResumes, nil
+}

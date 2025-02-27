@@ -1,6 +1,10 @@
 package resumes
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/google/uuid"
+)
 
 
 type Store struct {
@@ -28,7 +32,46 @@ func (s *Store) AddResumes(resumes []Resume) ([]Resume, error) {
 	return storedResumes, nil
 }
 
+func (s *Store) GetResumesByJobPostingID(jobPostingID uuid.UUID) ([]Resume, error) {
+	rows, err := s.db.Query("SELECT * FROM resumes WHERE job_posting_id = $1", jobPostingID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var resumes []Resume
+	for rows.Next() {
+		resume, err := ScanRowsToResume(rows)
+		if err != nil {
+			return nil, err
+		}
+		resumes = append(resumes, *resume)
+	}
+	return resumes, nil
+}
+
 func ScanRowToResume(rows *sql.Row) (*Resume, error) {
+
+	resume := new(Resume)
+	err := rows.Scan(
+		&resume.ID,
+		&resume.JobPostingID,
+		&resume.ApplicantName,
+		&resume.ApplicantEmail,
+		&resume.ResumePath,
+		&resume.ResumeText,
+		&resume.Status,
+		&resume.CreatedAt,
+		&resume.UpdatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return resume, nil
+}
+
+
+func ScanRowsToResume(rows *sql.Rows) (*Resume, error) {
 
 	resume := new(Resume)
 	err := rows.Scan(
