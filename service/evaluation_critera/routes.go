@@ -29,9 +29,9 @@ func (h *Handler) RegisterRoutes(router chi.Router) {
 
 
 func (h *Handler) createEvaluationCriteria(w http.ResponseWriter, r *http.Request) {
-	email := r.Context().Value("email").(string)
+	email := r.Context().Value("userEmail").(string)
 
-	var request []CreateCriteriaPayload
+	var request CreateCriteriaPayload
 	err := json.NewDecoder(r.Body).Decode(&request)
 
 	if err != nil {
@@ -51,7 +51,7 @@ func (h *Handler) createEvaluationCriteria(w http.ResponseWriter, r *http.Reques
 
 
 func (h *Handler) getEvaluationCriteria(w http.ResponseWriter, r *http.Request) {
-	userEmail := r.Context().Value("email").(string)
+	userEmail := r.Context().Value("userEmail").(string)
 
 	var payload GetEvaluationCriteriaPayload
 

@@ -19,7 +19,10 @@ func NewStore(db *sql.DB) *store {
 
 
 func (s *store) CreateEvaluationCriteria(jobPostingID uuid.UUID, criteriaName, description string, weight float32) (*EvaluationCriteria, error) {
-	rows := s.db.QueryRow("INSERT INTO evaluation_criteria (job_posting_id, criteria_name, description, weight) VALUES ($1, $2, $3, $4)", jobPostingID, criteriaName, description, weight)
+	rows := s.db.QueryRow(`
+    INSERT INTO evaluation_criteria (job_posting_id, criteria_name, description, weight) 
+    VALUES ($1, $2, $3, $4) 
+    RETURNING *`, jobPostingID, criteriaName, description, weight)
 
 	createdEvaluationCriteria, err := ScanRowToEvaluationCriteria(rows)
 	if err != nil {
